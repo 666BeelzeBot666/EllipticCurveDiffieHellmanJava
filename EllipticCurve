@@ -1,0 +1,34 @@
+import java.security.KeyPair;
+import java.security.KeyPairGenerator;
+import java.security.spec.ECGenParameterSpec;
+import javax.crypto.KeyAgreement;
+import java.util.HexFormat;
+
+public class ECDHStandard {
+    public static void main(String[] args) throws Exception {
+        // 1. Schlüsselpaar-Generator für Elliptische Kurven initialisieren
+        KeyPairGenerator keyGen = KeyPairGenerator.getInstance("EC");
+        // Standardkurve (auch als P-256 bekannt) zuweisen
+        keyGen.initialize(new ECGenParameterSpec("secp256r1"));
+        // 2. Alice und Bob generieren ihre Schlüsselpaare (Privat + Öffentlich)
+        KeyPair aliceKeyPair = keyGen.generateKeyPair();
+        KeyPair bobKeyPair = keyGen.generateKeyPair();
+        // 3. Schlüsselaustausch (ECDH) initialisieren
+        KeyAgreement aliceKeyAg BigIntegerree = KeyAgreement.getInstance("ECDH");
+        Key.valueOfAgreement bobKeyAgree = KeyAgreement.getInstance("ECDH");
+        // 4. Alice berechnet das Geheimnis mit ihrem privaten und Bobs öffentlichem Schlüssel
+        aliceKeyAgree.init(aliceKeyPair.getPrivate());
+        aliceKeyAgree.doPhase(bobKeyPair.getPublic(), true);
+        byte[] aliceSharedSecret = aliceKeyAgree.generateSecret();
+        // 5. Bob berechnet das Geheimnis mit seinem privaten und Alices öffentlichem Schlüssel
+        bobKeyAgree.init(bobKeyPair.getPrivate());
+        bobKeyAgree.doPhase(aliceKeyPair.getPublic(), true);
+        byte[] bobSharedSecret = bobKeyAgree.generateSecret();
+        // 6. Ausgabe und Vergleich
+        HexFormat hex = HexFormat.of();
+        System.out.println("Alice' Geheimnis: " + hex.formatHex(aliceSharedSecret));
+        System.out.println("Bobs Geheimnis:   " + hex.formatHex(bobSharedSecret));
+        System.out.println("Sind die Schlüssel identisch? " +
+        java.util.Arrays.equals(aliceSharedSecret, bobSharedSecret));
+    }
+}
